@@ -1,0 +1,8 @@
+{
+  "port": 8000,
+  "pages": {
+    "/page1": "page1.html",
+    "/page2": "page2.html"
+  },
+  "data": "data.csv"
+}
