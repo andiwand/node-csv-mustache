@@ -22,17 +22,38 @@ console.log('port: ' + config.port);
 var app = express();
 
 var get_view = function() {
-  var input = fs.readFileSync(config.data, 'utf8');
-  var data = csv(input, {delimiter: ',', columns: true, skip_empty_lines: true});
-  var entry = {};
+  var result = {};
+  
   var now = new Date(Date.now());
-  for (var d of data) {
-    var begin = new Date(Date.parse(d['date']));
-    if (begin < now) {
-      entry = d;
+  
+  for (var data of config.data) {
+    switch (data.type) {
+      case 'dynamic': {
+        var input = fs.readFileSync(data.path, 'utf8');
+        var csvdata = csv(input, {delimiter: ',', columns: true, skip_empty_lines: true});
+        var entry = {};
+        for (var d of csvdata) {
+          var begin = new Date(Date.parse(d[data.column]));
+          if (begin < now) {
+            entry = d;
+          }
+        }
+        result = Object.assign(result, entry);
+      } break;
+      case 'static':
+        result[data.name] = fs.readFileSync(data.path, 'utf8');
+        break;
+      case 'date':
+        result[data.name] = now.toDateString();
+        break;
+      default:
+        console.error('unknown type: ' + data.type);
+        continue;
     }
   }
-  return entry;
+
+  console.log(result);
+  return result;
 };
 
 var get_handler = function(page) {

@@ -1,8 +1,12 @@
 {
   "port": 8000,
+  "data": [
+    { "type": "dynamic", "path": "dynamic.csv", "column": "date" },
+    { "type": "static", "name": "static", "path": "static.txt" },
+    { "type": "date", "name": "date" }
+  ],
   "pages": {
     "/page1": "page1.html",
     "/page2": "page2.html"
-  },
-  "data": "data.csv"
+  }
 }
